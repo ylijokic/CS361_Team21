@@ -5,3 +5,4 @@
 ### Jordan Hamilton
 ### Sean Murphy
 ### Stephen Sullivan
+### Maxime Desmet Vanden Stock
