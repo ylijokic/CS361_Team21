@@ -1,8 +1,19 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+
+posts = [
+    {
+        'musician': 'Steve S',
+        'title': 'Profile Post 1',
+        'content': 'First post',
+        'date_posted': 'May 3rd, 2020'
+    },
+]
 
 def home(request):
-    return render(request, 'account/home.html')
+    context = {
+        'posts': posts
+    }
+    return render(request, 'account/home.html', context)
 
 def profile(request):
     return render(request, 'account/profile.html')
