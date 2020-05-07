@@ -10,6 +10,11 @@ posts = [
     },
 ]
 
+def landing(request):
+    return render(request, 'account/landing.html')
+
+# Decorator to check if user is logged in before displaying profile
+@login_required
 def home(request):
     context = {
         'posts': posts
