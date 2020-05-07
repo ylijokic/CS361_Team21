@@ -32,6 +32,8 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'account.apps.AccountConfig',
+    'users.apps.UsersConfig',
+    'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -119,3 +121,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'root')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+    #Bootstrap files found in boot folder
+    os.path.join(BASE_DIR, 'boot'),
+]
+# Tells crispy forms to use bootstrap 4
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# Sets default url to account-home page after successful login
+LOGIN_REDIRECT_URL = 'account-home'
+
+# Sets default url to login page if user tries to access unauthorized page 
+LOGIN_URL = 'login'
