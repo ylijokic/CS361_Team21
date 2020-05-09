@@ -1,0 +1,23 @@
+{% extends "account/base.html" %}
+<!-- Crispy forms will take care of formatting/styling the forms with bootstrap-->
+{% load crispy_forms_tags %}
+{% block content %}
+   <div>
+        <!-- This form allows users to login to their account -->
+        <!-- The csrf_token is required by django for all forms as added security -->
+       <form action="" method="POST">
+           {% csrf_token %}
+
+           <fieldset class="form-group">
+               <legend class="border-bottom mb-4">Join Today</legend>
+               {{ form|crispy }}
+           </fieldset>
+           <div class="form-group">
+               <button class="btn btn-outline-info" type="submit" >Sign Up</button>
+           </div>
+       </form>
+       <div class="border-top pt-3">
+           <small class="text-muted">Already Registered? <a href="{% url 'login' %}" class="ml-2">Sign In</a> </small>
+       </div>
+   </div>
+{% endblock content %}

@@ -6,5 +6,6 @@
         <p>By {{ post.musician }} on {{ post.date_posted }}</p>
         <p>{{ post.content }}</p>
     {% endfor %}
+    {{ musician.user.username }}
 {% endblock content %}
 
