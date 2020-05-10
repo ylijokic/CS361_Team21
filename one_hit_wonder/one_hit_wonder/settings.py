@@ -127,6 +127,10 @@ STATICFILES_DIRS = [
     #Bootstrap files found in boot folder
     os.path.join(BASE_DIR, 'boot'),
 ]
+#Creates directories for different types of media
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
 # Tells crispy forms to use bootstrap 4
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 

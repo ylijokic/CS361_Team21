@@ -1,8 +1,11 @@
 {% extends "account/base.html" %}
 
+<h1>Welcome Back!</h1>
+
 {% block content %}
+    <h1>Welcome Back!</h1>
     {% for post in posts %}
-        <h1>{{ post.title }}</h1>
+        <h2>{{ post.title }}</h2>
         <p>By {{ post.musician }} on {{ post.date_posted }}</p>
         <p>{{ post.content }}</p>
     {% endfor %}

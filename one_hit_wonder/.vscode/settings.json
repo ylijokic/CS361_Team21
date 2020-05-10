@@ -1,0 +1,8 @@
+{
+    "python.pythonPath": "C:\\Users\\pembr\\testenv\\Scripts\\python.exe",
+
+    "python.linting.pylintArgs": [
+        "--load-plugins",
+        "pylint_django"
+    ]
+}
