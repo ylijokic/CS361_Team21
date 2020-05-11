@@ -124,6 +124,10 @@ STATICFILES_DIRS = [
 # Tells crispy forms to use bootstrap 4
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
+# Creates directories for different types of media
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
 # Sets default url to account-home page after successful login
 LOGIN_REDIRECT_URL = 'account-home'
 
