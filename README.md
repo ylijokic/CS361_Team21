@@ -23,7 +23,7 @@ To access the application, visit https://onehitwonder.rocks and login using the 
 
 Username: subramar
 
-Password: OregonState361!
+Password: OSUSWE361!
 
 To run the application locally:
 1. Clone or download the master branch
