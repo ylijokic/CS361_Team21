@@ -16,11 +16,25 @@
  Our team operates using Scrum methodologies ([More](https://www.scrumguides.org/scrum-guide.html#team-po)).
  
  ## Background and Description
-The OneHitWonders application is a Django based web-app that enables both Musicians looking for work and Venue owners looking for Musicians to connect with one another via skill level specific advertisement.Employers can post experience targeted advertisements to Musicians that match the employers desired criteria.All data interactions and storage of the web application is done using the AWS relational database.
+The OneHitWonder application is a Django based web-app that enables both Musicians looking for work and Venue owners looking for Musicians to connect with one another via skill level specific advertisement. Employers can post experience targeted advertisements to Musicians that match the employers desired criteria. All data interactions and storage of the web application is done using the AWS relational database.
 
 ## Usage Instructions
+To access the application, visit https://onehitwonder.rocks and login using the following credentials:
 
+Username: subramar
 
+Password: OregonState361!
+
+To run the application locally:
+* Clone or download the master branch
+* Create install any dependencies
+* Run the server.
 
 ## Example Usage
-
+```
+python -m venv env
+source env/bin/activate
+cd one_hit_wonder
+pip install -r requirements.txt
+python manage.py runserver
+```
