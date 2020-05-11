@@ -27,7 +27,7 @@ Password: OregonState361!
 
 To run the application locally:
 * Clone or download the master branch
-* Create install any dependencies
+* Install any dependencies
 * Run the server.
 
 ## Example Usage
