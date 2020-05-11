@@ -26,9 +26,10 @@ Username: subramar
 Password: OregonState361!
 
 To run the application locally:
-* Clone or download the master branch
-* Install any dependencies
-* Run the server.
+1. Clone or download the master branch
+2. Create and activate a Python 3 environment
+3. Install dependencies
+4. Run the server
 
 ## Example Usage
 ```
