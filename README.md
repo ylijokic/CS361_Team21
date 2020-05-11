@@ -25,13 +25,13 @@ Username: subramar
 
 Password: OSUSWE361!
 
-Note that the administrative interface is accessible using the same credentials through https://onehitwonder.rocks/admin
+Note that the administrative interface is accessible using the same credentials through https://onehitwonder.rocks/admin.
 
 To run the application locally:
-1. Clone or download the master branch
-2. Create and activate a Python 3 environment
-3. Install dependencies
-4. Run the server
+1. Clone the master branch via Git, or download the latest release [here](https://github.com/ylijokic/CS361_Team21/releases).
+2. Create and activate a Python 3 environment.
+3. Install dependencies.
+4. Run the server.
 
 ## Example Usage
 ```
