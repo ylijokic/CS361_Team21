@@ -25,6 +25,8 @@ Username: subramar
 
 Password: OSUSWE361!
 
+Note that the administrative interface is accessible using the same credentials through https://onehitwonder.rocks/admin
+
 To run the application locally:
 1. Clone or download the master branch
 2. Create and activate a Python 3 environment
