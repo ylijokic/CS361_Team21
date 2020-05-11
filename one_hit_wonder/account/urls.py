@@ -1,8 +1,11 @@
 from django.urls import path
-from . import views
 from django.contrib.auth import views as auth_views
+from django.conf import settings
+from django.conf.urls.static import static
+from . import views
 
 urlpatterns = [
+    path('', views.home, name='account-landing'),
     path('', views.home, name='account-home'),
     path('profile/', views.profile, name='account-profile'),
     path('messages/', views.messages, name='account-messages'),
@@ -13,3 +16,6 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(template_name="account/logout.html"), name="logout"),
 ]
 
+# For use during debugging. Change settings for live deployment
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

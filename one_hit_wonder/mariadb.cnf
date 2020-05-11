@@ -1,0 +1,7 @@
+[client]
+host = one-hit-wonder.cqtwgm1vyu0i.us-east-1.rds.amazonaws.com
+database = one_hit_wonder
+user = admin   
+password = D0nt8reakM3!
+default-character-set = utf8
+init_command = SET default_storage_engine=INNODB
