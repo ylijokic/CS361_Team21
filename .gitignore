@@ -119,4 +119,18 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# End of https://www.gitignore.io/api/django
+# Editor files
+.idea/
+.vscode/
+
+# macOS hidden files
+.DS_Store
+
+# Windows thumbnail cache files
+Thumbs.db
+
+# Folder config file
+[Dd]esktop.ini
+
+# Windows shortcuts
+*.lnk
