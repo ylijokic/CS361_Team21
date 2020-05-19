@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages as msgs
-from .forms import UserRegisterForm
-from .models import Musician
+from django.views.generic import TemplateView
+from .forms import UserRegisterForm, CreateAdForm
+from .models import Musician, Advertisement
 
 posts = [
     {
@@ -49,10 +50,20 @@ def matches(request):
     return render(request, 'account/matches.html', {'title': 'Matches'})
 
 
-# Decorator to check if user is logged in before displaying profile
 @login_required
 def create_ad(request):
-    return render(request, 'account/create_ad.html', {'title': 'Create Ad'})
+    if request.method == 'POST':
+        form = CreateAdForm(request.POST)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.position_filled = False
+            instance.creator_id = request.user.musician.id
+            instance.save()
+            msgs.success(request, f"New ad created successfully")
+            return redirect(create_ad)
+    else:
+        form = CreateAdForm()
+    return render(request, 'account/create_ad.html', {'form': form})
 
 
 def register(request):
