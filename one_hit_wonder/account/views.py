@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages as msgs
 from django.views.generic import TemplateView
-from .forms import UserRegisterForm, CreateAdForm
+from .forms import UserRegisterForm, CreateAdForm, LocationSubform
 from .models import Musician, Advertisement
 
 posts = [
@@ -54,16 +54,19 @@ def matches(request):
 def create_ad(request):
     if request.method == 'POST':
         form = CreateAdForm(request.POST)
-        if form.is_valid():
+        subform = LocationSubform(request.POST)
+        if form.is_valid() and subform.is_valid():
             instance = form.save(commit=False)
             instance.position_filled = False
+            instance.location = subform.save()
             instance.creator_id = request.user.musician.id
             instance.save()
             msgs.success(request, f"New ad created successfully")
             return redirect(create_ad)
     else:
         form = CreateAdForm()
-    return render(request, 'account/create_ad.html', {'form': form})
+        subform = LocationSubform()
+    return render(request, 'account/create_ad.html', {'form': form, 'subform': subform})
 
 
 def register(request):

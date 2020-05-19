@@ -17,7 +17,13 @@ class UserRegisterForm(UserCreationForm):
                   'password2']
 
 # class for the Create Ad form
+class LocationSubform(ModelForm):
+    class Meta:
+        model = Location
+        fields = ['city', 'state', 'zip_code']
+
+# class for the Create Ad form
 class CreateAdForm(ModelForm):
     class Meta:
         model = Advertisement
-        fields = ['instrument', 'location']
+        fields = ['instrument']
