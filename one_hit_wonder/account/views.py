@@ -32,8 +32,8 @@ def home(request):
 # Decorator to check if user is logged in before displaying profile
 @login_required
 def profile(request):
+    # Query ads and filter for the current user
     ads = Advertisement.objects.filter(creator=request.user.musician.id)
-    print(ads)
     context = {
         'title': 'Profile',
         'ads': ads
@@ -56,13 +56,21 @@ def matches(request):
 @login_required
 def create_ad(request):
     if request.method == 'POST':
+        # main form
         form = CreateAdForm(request.POST)
+        # subform for location
         subform = LocationSubform(request.POST)
+        # check if all inputs are correct
         if form.is_valid() and subform.is_valid():
+            # delay the save for the main form
             instance = form.save(commit=False)
+            # default to false because its just been created
             instance.position_filled = False
+            # save the location
             instance.location = subform.save()
+            # the creator id is the current user
             instance.creator_id = request.user.musician.id
+            # add new ad to the database
             instance.save()
             msgs.success(request, f"New ad created successfully")
             return redirect(create_ad)
