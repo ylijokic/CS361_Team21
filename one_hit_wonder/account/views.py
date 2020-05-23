@@ -32,8 +32,11 @@ def home(request):
 # Decorator to check if user is logged in before displaying profile
 @login_required
 def profile(request):
+    ads = Advertisement.objects.filter(creator=request.user.musician.id)
+    print(ads)
     context = {
         'title': 'Profile',
+        'ads': ads
     }
     return render(request, 'account/profile.html', context)
 
