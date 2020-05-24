@@ -108,11 +108,13 @@ def update_profile(request):
                 musician.instruments.set([musician_instrument])
                 musician.looking_for_work = musician_form.cleaned_data.get('looking_for_work')
                 musician.image = musician_form.cleaned_data.get('image')
+                musician.save()
             except ObjectDoesNotExist:
                 # If the user's musician profile wasn't completed yet, create a musician object based off of the forms,
                 # then associate the musician object with the user.
                 musician, musician_created = Musician.objects.get_or_create(**musician_form.cleaned_data, user=request.user, location=musician_location)
             musician.instruments.set([musician_instrument])
+            musician.save()
             msgs.success(request, f"Your profile has been updated.")
             return redirect('account-profile')
     else:
