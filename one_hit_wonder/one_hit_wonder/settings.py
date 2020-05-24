@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'onehitwonder.rocks', 'www.onehitwond
 INSTALLED_APPS = [
     'account.apps.AccountConfig',
     'crispy_forms',
+    'embed_video',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
