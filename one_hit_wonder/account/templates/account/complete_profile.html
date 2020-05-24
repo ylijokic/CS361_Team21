@@ -1,0 +1,33 @@
+<!-- Crispy forms will take care of formatting/styling the forms with bootstrap-->
+{% extends "account/base.html" %}
+{% block nav %}
+{% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="modal fade" data-keyboard="false" data-backdrop="static" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="profileModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-center">Slow down, rockstar.</h5>
+                    <h6 id="profileModalLabel">You need to complete your musician profile first.</h6>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'account-profile-update' %}" method="POST">
+                        {% csrf_token %}
+                        {{ musician_form|crispy }}
+                        {{ location_form|crispy }}
+                        {{ instrument_form|crispy }}
+                        <div class="form-actions">
+                            <input type="submit" name="submit" value="Save" class="btn btn-primary" id="submit-save">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
+{% block js %}
+    {{ block.super }}
+    <script>$('#profileModal').modal('show')</script>
+{% endblock %}
