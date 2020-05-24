@@ -4,7 +4,9 @@ from django.shortcuts import render, redirect
 from django.core.exceptions import ObjectDoesNotExist
 
 from .forms import UserRegisterForm, MusicianProfileForm, InstrumentSubform, LocationSubform
-from .models import Musician, Location, Instrument
+from .models import Musician, Location, Instrument, Advertisement, Video
+from .config import api_key
+
 
 posts = [
     {
@@ -39,9 +41,25 @@ def home(request):
 def profile(request):
     if profile_is_incomplete(request.user):
         return redirect('account-home')
-
-    return render(request, 'account/profile.html', {'title': 'Profile'})
-
+      
+    # Grab the variables needed for Profile Page
+    location = request.user.musician.location
+    instruments = request.user.musician.instruments.get().name
+    skill = request.user.musician.instruments.get().skill_level
+    work = request.user.musician.looking_for_work
+    videos = request.user.musician.videos.all()
+    
+    accessToken = api_key
+    context = {
+        'title': 'Profile',
+        'location': location,
+        'instruments': instruments,
+        'skill': range(skill),
+        'work': work,
+        'videos': videos,
+        'accessToken': accessToken
+    }
+    return render(request, 'account/profile.html', context)
 
 # Decorator to check if user is logged in before displaying profile
 @login_required

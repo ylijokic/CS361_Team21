@@ -1,14 +1,111 @@
 {% extends "account/base.html" %}
 {% load crispy_forms_tags %}
-{% block content %}
-    <div class="content-section">
-        <div class="media">
-            <img class="rounded-circle account-img" src="{{ user.musician.image.url }}">
-            <div class="media-body">
-                <h2 class="account-heading">{{ user.username }}</h2>
-                <p class="text-secondary">{{ user.email }}</p>
-            </div>
-        </div>
+{% load embed_video_tags %}
+{% block head %}
+    <script src='https://api.mapbox.com/mapbox-gl-js/v1.10.0/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v1.10.0/mapbox-gl.css' rel='stylesheet' />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{% endblock head %}
 
+{% block content %}
+    <div class="container">
+        <div class="row m-3">
+            <!--Div to Hold Musician Info-->
+            <div class="col-med-3 m-2">
+                <div class="media card mb-5 p-2" style="width: 15rem;">
+                    <img class="card-img-top rounded-circle account-img" src="{{ user.musician.image.url }}">
+                    <div class="media-body card-block mb-4">
+                        <h2 class="account-heading card-title">{{ user.username }}</h2>
+                        <p class="text-secondary card-text">{{ user.email }}</p>
+                    </div>
+                
+                    <div class="card-block mb-4">
+                            <p class="card-text m-0">{{ instruments }}</p>
+                            {% if skill %}
+                                {% for i in skill %}
+                                    <i class="fa fa-star fa-2x fa-border" aria-hidden="true" style="color:gold;"></i>
+                                {% endfor %}
+                            {% endif %} 
+                    </div> 
+
+                    <div class="card-block mb-5">
+                        {% if work %}
+                            <i class="fa fa-music ml-2 mr-2" aria-hidden="true"></i>
+                            <span class="badge badge-success">Currently Seeking Work</span>
+                        {% else %}
+                            <i class="fa fa-music ml-2 mr-2" aria-hidden="true"></i>
+                            <span class="badge badge-danger">Not Currently Seeking Work</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="border-top pt-3 w-100 text-center">
+                        <a href="{% url 'account-profile-update' %}" class="btn btn-outline-info" role="button">Update Profile</a>
+                    </div>
+
+                </div>
+            </div>
+
+            <!--Div to hold Media Videos-->
+            <div class="col-med-6 m-2">
+                <div class="media card mb-5 p-2" style="width: 31rem">
+                {% for v in videos %}
+                
+                    {% video v as my_video %}
+                        {% video my_video "small" %}
+                    {% endvideo %}
+                    
+                {% endfor %}
+                </div>
+            </div>
+           
+            <div class="col-med-3 m-2">
+                <!-- Div to hold mapbox Map  -->
+                <figure class="figure"> 
+                    <div class="rounded figure-img img-fluid" id="map" width="" style="height: 20em; width: 20em"></div>
+                    <figcaption class="figure-caption">{{ location }}</figcaption>
+                </figure>
+            </div>    
+       </div>
     </div>
+
+   
+
+    
+    <script src="https://unpkg.com/es6-promise@4.2.4/dist/es6-promise.auto.min.js"></script>
+    <script src="https://unpkg.com/@mapbox/mapbox-sdk/umd/mapbox-sdk.min.js"></script>
+    <script>
+        mapboxgl.accessToken = `{{ accessToken }}`;
+        
+        // Create instance of mapboxClient
+        var mapboxClient = mapboxSdk({ accessToken: mapboxgl.accessToken });
+        mapboxClient.geocoding
+            //geocoding to get lat/long coordinates from query string
+            .forwardGeocode({
+                //Query String variable passed in from views.py
+                query: "{{ location }}",
+                autocomplete: false,
+                limit: 1
+            })
+            .send()
+            .then(function(response) {
+                if (
+                response &&
+                response.body &&
+                response.body.features &&
+                response.body.features.length
+            ) {
+            var feature = response.body.features[0];
+            
+            // Create instance of actual Map to be displayed
+            var map = new mapboxgl.Map({
+                container: 'map',
+                style: 'mapbox://styles/mapbox/dark-v10',
+                center: feature.center,
+                zoom: 9
+            });
+            //Create Marker to pinpoint location
+            //new mapboxgl.Marker().setLngLat(feature.center).addTo(map);
+            }
+        });
+    </script>
 {% endblock content %}
