@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.core.exceptions import ObjectDoesNotExist
 
-from .forms import UserRegisterForm, MusicianProfileForm, InstrumentSubform, LocationSubform
+from .forms import UserRegisterForm, MusicianProfileForm, InstrumentSubform, LocationSubform, VideoSubform
 from .models import Musician, Location, Instrument, Advertisement, Video
 from .config import api_key
 
@@ -111,12 +111,14 @@ def update_profile(request):
         musician_form = MusicianProfileForm(request.POST)
         location_form = LocationSubform(request.POST)
         instrument_form = InstrumentSubform(request.POST)
+        video_form = VideoSubform(request.POST)
         # Verify all forms have valid input.
-        if musician_form.is_valid() and location_form.is_valid() and instrument_form.is_valid():
+        if musician_form.is_valid() and location_form.is_valid() and instrument_form.is_valid() and video_form.is_valid():
             # Create the location and instrument entered by the user,
             # or locate matching instances in the database.
             musician_location, location_created = Location.objects.get_or_create(**location_form.cleaned_data)
             musician_instrument, instrument_created = Instrument.objects.get_or_create(**instrument_form.cleaned_data)
+            musician_video, video_created = Video.objects.get_or_create(**video_form.cleaned_data)
 
             try:
                 # If the user is being updated, find the user's musician data,
@@ -124,6 +126,7 @@ def update_profile(request):
                 musician = Musician.objects.get(user=request.user)
                 musician.location = musician_location
                 musician.instruments.set([musician_instrument])
+                musician.videos.add(musician_video)
                 musician.looking_for_work = musician_form.cleaned_data.get('looking_for_work')
                 musician.image = musician_form.cleaned_data.get('image')
                 musician.save()
@@ -131,8 +134,8 @@ def update_profile(request):
                 # If the user's musician profile wasn't completed yet, create a musician object based off of the forms,
                 # then associate the musician object with the user.
                 musician, musician_created = Musician.objects.get_or_create(**musician_form.cleaned_data, user=request.user, location=musician_location)
-            musician.instruments.set([musician_instrument])
-            musician.save()
+                musician.instruments.set([musician_instrument])
+                musician.save()
             msgs.success(request, f"Your profile has been updated.")
             return redirect('account-profile')
     else:
@@ -154,10 +157,12 @@ def update_profile(request):
             'name': current_instrument.name,
             'skill_level': current_instrument.skill_level
         })
+        video_form = VideoSubform()
     return render(request, 'account/complete_profile.html', {
         'musician_form': musician_form,
         'location_form': location_form,
-        'instrument_form': instrument_form
+        'instrument_form': instrument_form,
+        'video_form': video_form
     })
 
 
