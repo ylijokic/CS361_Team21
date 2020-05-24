@@ -1,12 +1,14 @@
 {% extends "account/base.html" %}
 
-<h1>Welcome Back!</h1>
-
 {% block content %}
+    {% if incomplete %}
+        {% include "account/complete_profile.html" %}
+    {% else %}
     <h1>Welcome Back!</h1>
     {% for post in posts %}
         <h2>{{ post.title }}</h2>
         <p>By {{ post.musician }} on {{ post.date_posted }}</p>
         <p>{{ post.content }}</p>
     {% endfor %}
+    {% endif %}
 {% endblock content %}
