@@ -1,6 +1,7 @@
 from django.contrib import messages as msgs
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from django.core.exceptions import ObjectDoesNotExist
 
 from .forms import UserRegisterForm, MusicianProfileForm, InstrumentSubform, LocationSubform
 from .models import Musician, Location, Instrument
@@ -95,17 +96,28 @@ def update_profile(request):
         if musician_form.is_valid() and location_form.is_valid() and instrument_form.is_valid():
             musician_location, location_created = Location.objects.get_or_create(**location_form.cleaned_data)
             musician_instrument, instrument_created = Instrument.objects.get_or_create(**instrument_form.cleaned_data)
-            musician, musician_created = Musician.objects.get_or_create(**musician_form.cleaned_data, user=request.user, location=musician_location)
-            musician.instruments.add(musician_instrument)
-            msgs.success(request, f"Your profile has been updated! Enjoy One Hit Wonder.")
+            try:
+                musician = Musician.objects.get(user=request.user)
+                musician.location = musician_location
+                musician.instruments.set([musician_instrument])
+                musician.looking_for_work = musician_form.cleaned_data.get('looking_for_work')
+                musician.image = musician_form.cleaned_data.get('image')
+            except ObjectDoesNotExist:
+                musician, musician_created = Musician.objects.get_or_create(**musician_form.cleaned_data, user=request.user, location=musician_location)
+            musician.instruments.set([musician_instrument])
+            msgs.success(request, f"Your profile has been updated.")
             return redirect('account-profile')
     else:
+        if profile_is_incomplete(request.user):
+            return redirect('account-home')
         musician_form = MusicianProfileForm()
         location_form = LocationSubform()
         instrument_form = InstrumentSubform()
-    return render(request, 'account/complete_profile.html', {'musician_form': musician_form,
-                                                             'location_form': location_form,
-                                                             'instrument_form': instrument_form})
+    return render(request, 'account/complete_profile.html', {
+        'musician_form': musician_form,
+        'location_form': location_form,
+        'instrument_form': instrument_form
+    })
 
 
 def profile_is_incomplete(user):
