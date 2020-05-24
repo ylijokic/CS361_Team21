@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from embed_video.fields import EmbedVideoField
 
 
 class Musician(models.Model):
@@ -7,6 +8,7 @@ class Musician(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     location = models.ForeignKey('Location', on_delete=models.PROTECT)
     instruments = models.ManyToManyField('Instrument')
+    videos = models.ManyToManyField('Video')
     image = models.ImageField(default='default.jpg', upload_to='profile_pics', blank=True)
 
     def __str__(self):
@@ -59,3 +61,10 @@ class Advertisement(models.Model):
         return f"{self.creator.user.first_name} {self.creator.user.last_name} - " \
                f"{self.instrument.name} (Level {self.instrument.skill_level}) - " \
                f"{self.location.city}, {self.location.state}"
+
+
+class Video(models.Model):
+    video = EmbedVideoField()
+
+    def __str__(self):
+        return self.video
