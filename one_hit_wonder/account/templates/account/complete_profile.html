@@ -1,0 +1,14 @@
+<!-- Crispy forms will take care of formatting/styling the forms with bootstrap-->
+{% extends "account/base.html" %}
+{% load crispy_forms_filters %}
+{% block content %}
+    <form action="{% url 'account-profile-update' %}" method="POST">
+        {% csrf_token %}
+        {{ musician_form|crispy }}
+        {{ location_form|crispy }}
+        {{ instrument_form|crispy }}
+        <div class="form-actions">
+            <input type="submit" name="submit" value="Save" class="btn btn-primary" id="submit-save">
+        </div>
+    </form>
+{% endblock content %}

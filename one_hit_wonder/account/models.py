@@ -1,7 +1,5 @@
-from django.db import models
-
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 from embed_video.fields import EmbedVideoField
 
 
@@ -28,6 +26,12 @@ class Instrument(models.Model):
 
     skill_level = models.IntegerField(choices=Skill.choices)
 
+    def save(self, *args, **kwargs):
+        value = getattr(self, 'name', False)
+        if value:
+            setattr(self, 'name', value.capitalize())
+        super(Instrument, self).save(*args, **kwargs)
+
     def __str__(self):
         return f"{self.name} (Level {self.skill_level})"
 
@@ -36,6 +40,12 @@ class Location(models.Model):
     city = models.CharField(max_length=100)
     state = models.CharField(max_length=100)
     zip_code = models.CharField(max_length=10)
+
+    def save(self, *args, **kwargs):
+        value = getattr(self, 'city', False)
+        if value:
+            setattr(self, 'city', value.capitalize())
+        super(Location, self).save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.city}, {self.state} {self.zip_code}"
