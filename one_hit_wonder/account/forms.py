@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.forms import ModelForm
 
-from .models import Musician, Instrument, Location
+from .models import Musician, Instrument, Location, Video
 
 
 # Create a new form class that inherits from the Django UserCreationForm
@@ -102,3 +102,9 @@ class LocationSubform(ModelForm):
         labels = {
             'zip_code': 'ZIP Code',
         }
+
+
+class VideoSubform(ModelForm):
+    class Meta:
+        model = Video
+        fields = '__all__'
