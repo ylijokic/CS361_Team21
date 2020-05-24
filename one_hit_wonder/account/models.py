@@ -24,6 +24,12 @@ class Instrument(models.Model):
 
     skill_level = models.IntegerField(choices=Skill.choices)
 
+    def save(self, *args, **kwargs):
+        value = getattr(self, 'name', False)
+        if value:
+            setattr(self, 'name', value.capitalize())
+        super(Instrument, self).save(*args, **kwargs)
+
     def __str__(self):
         return f"{self.name} (Level {self.skill_level})"
 
