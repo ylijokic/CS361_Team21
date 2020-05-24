@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages as msgs
 from .forms import UserRegisterForm
-from .models import Musician, Location, Instrument, Advertisement
+from .models import Musician, Location, Instrument, Advertisement, Video
+from .config import api_key
 
 posts = [
     {
@@ -31,25 +32,21 @@ def home(request):
 # Decorator to check if user is logged in before displaying profile
 @login_required
 def profile(request):
-    # Grab the location of the user that is currently logged in
+    # Grab the variables needed for Profile Page
     location = request.user.musician.location
-
-    # Grab the instruments that the musician plays
     instruments = request.user.musician.instruments.get().name
-    
-    #Grab the skill level of the current musician
     skill = request.user.musician.instruments.get().skill_level
-    print(skill)
-
-    #Grab boolean value if musician is looking for work
     work = request.user.musician.looking_for_work
-    accessToken = ''
+    videos = request.user.musician.videos.all()
+    
+    accessToken = api_key
     context = {
         'title': 'Profile',
         'location': location,
         'instruments': instruments,
         'skill': range(skill),
         'work': work,
+        'videos': videos,
         'accessToken': accessToken
     }
     return render(request, 'account/profile.html', context)
