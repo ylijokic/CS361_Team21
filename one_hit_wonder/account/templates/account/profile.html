@@ -56,14 +56,26 @@
                 {% endfor %}
                 </div>
             </div>
-           
             <div class="col-med-3 m-2">
                 <!-- Div to hold mapbox Map  -->
                 <figure class="figure"> 
                     <div class="rounded figure-img img-fluid" id="map" width="" style="height: 20em; width: 20em"></div>
                     <figcaption class="figure-caption">{{ location }}</figcaption>
                 </figure>
-            </div>    
+            </div>
+            <!-- This parts shows ads created by users on their profile -->
+            {% if ads %}
+                <div class="ads col-med-3 m-2">
+                    <h2>Your ads:</h2>
+                    <div class="media card mb-5 p-2" style="width: 31rem">
+                        <ul>
+                            {% for ad in ads %}
+                                <li>{{ ad }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% endif %}
        </div>
     </div>
 
