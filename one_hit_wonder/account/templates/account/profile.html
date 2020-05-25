@@ -9,6 +9,18 @@
                 <p class="text-secondary">{{ user.email }}</p>
             </div>
         </div>
+        
+        <!-- This parts shows ads created by users on their profile -->
+        {% if ads %}
+        <div class="ads">
+            <h2>Your ads:</h2>
+            <ul>
+                {% for ad in ads %}
+                    <li>{{ ad }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
 
     </div>
 {% endblock content %}

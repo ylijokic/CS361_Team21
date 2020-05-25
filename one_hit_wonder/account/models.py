@@ -46,6 +46,11 @@ class Advertisement(models.Model):
     location = models.ForeignKey(Location, models.PROTECT)
 
     def __str__(self):
-        return f"{self.creator.user.first_name} {self.creator.user.last_name} - " \
+        if self.position_filled == False:
+            status = 'OPEN'
+        else:
+            status = 'CLOSED'
+        return f"[{status}] " \
+               f"{self.creator.user.first_name} {self.creator.user.last_name} - " \
                f"{self.instrument.name} (Level {self.instrument.skill_level}) - " \
                f"{self.location.city}, {self.location.state}"

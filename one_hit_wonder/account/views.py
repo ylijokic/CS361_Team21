@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages as msgs
-from .forms import UserRegisterForm
-from .models import Musician
+from django.views.generic import TemplateView
+from .forms import UserRegisterForm, CreateAdForm, LocationSubform
+from .models import Musician, Advertisement
 
 posts = [
     {
@@ -31,8 +32,11 @@ def home(request):
 # Decorator to check if user is logged in before displaying profile
 @login_required
 def profile(request):
+    # Query ads and filter for the current user
+    ads = Advertisement.objects.filter(creator=request.user.musician.id)
     context = {
         'title': 'Profile',
+        'ads': ads
     }
     return render(request, 'account/profile.html', context)
 
@@ -49,10 +53,31 @@ def matches(request):
     return render(request, 'account/matches.html', {'title': 'Matches'})
 
 
-# Decorator to check if user is logged in before displaying profile
 @login_required
 def create_ad(request):
-    return render(request, 'account/create_ad.html', {'title': 'Create Ad'})
+    if request.method == 'POST':
+        # main form
+        form = CreateAdForm(request.POST)
+        # subform for location
+        subform = LocationSubform(request.POST)
+        # check if all inputs are correct
+        if form.is_valid() and subform.is_valid():
+            # delay the save for the main form
+            instance = form.save(commit=False)
+            # default to false because its just been created
+            instance.position_filled = False
+            # save the location
+            instance.location = subform.save()
+            # the creator id is the current user
+            instance.creator_id = request.user.musician.id
+            # add new ad to the database
+            instance.save()
+            msgs.success(request, f"New ad created successfully")
+            return redirect(create_ad)
+    else:
+        form = CreateAdForm()
+        subform = LocationSubform()
+    return render(request, 'account/create_ad.html', {'form': form, 'subform': subform})
 
 
 def register(request):
