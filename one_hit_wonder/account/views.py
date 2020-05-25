@@ -60,9 +60,10 @@ def profile(request):
         'work': work,
         'videos': videos,
         'accessToken': accessToken,
-        'ads': ads # Query ads and filter for the current user
+        'ads': ads  # Query ads and filter for the current user
     }
     return render(request, 'account/profile.html', context)
+
 
 # Decorator to check if user is logged in before displaying profile
 @login_required
@@ -99,7 +100,8 @@ def create_ad(request):
             # default to false because its just been created
             instance.position_filled = False
             # save the location
-            instance.location = subform.save()
+            ad_location, location_created = Location.objects.get_or_create(**subform.cleaned_data)
+            instance.location = ad_location
             # the creator id is the current user
             instance.creator_id = request.user.musician.id
             # add new ad to the database
