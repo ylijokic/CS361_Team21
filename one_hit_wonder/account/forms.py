@@ -6,6 +6,7 @@ from django.forms import ModelForm
 from .models import Musician, Instrument, Location, Video
 
 
+
 # Create a new form class that inherits from the Django UserCreationForm
 class UserRegisterForm(UserCreationForm):
     # This allows us to add the email field to the form
@@ -108,3 +109,10 @@ class VideoSubform(ModelForm):
     class Meta:
         model = Video
         fields = '__all__'
+
+        
+# class for the Create Ad form
+class CreateAdForm(ModelForm):
+    class Meta:
+        model = Advertisement
+        fields = ['instrument']

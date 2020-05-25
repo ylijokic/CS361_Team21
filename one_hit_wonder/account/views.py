@@ -2,11 +2,11 @@ from django.contrib import messages as msgs
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.core.exceptions import ObjectDoesNotExist
+from django.views.generic import TemplateView
 
-from .forms import UserRegisterForm, MusicianProfileForm, InstrumentSubform, LocationSubform, VideoSubform
+from .forms import UserRegisterForm, CreateAdForm, MusicianProfileForm, InstrumentSubform, LocationSubform, VideoSubform
 from .models import Musician, Location, Instrument, Advertisement, Video
 from .config import api_key
-
 
 posts = [
     {
@@ -48,6 +48,7 @@ def profile(request):
     skill = request.user.musician.instruments.get().skill_level
     work = request.user.musician.looking_for_work
     videos = request.user.musician.videos.all()
+    ads = Advertisement.objects.filter(creator=request.user.musician.id)
     
     accessToken = api_key
     context = {
@@ -57,7 +58,8 @@ def profile(request):
         'skill': range(skill),
         'work': work,
         'videos': videos,
-        'accessToken': accessToken
+        'accessToken': accessToken,
+        'ads': ads # Query ads and filter for the current user
     }
     return render(request, 'account/profile.html', context)
 
@@ -79,13 +81,34 @@ def matches(request):
     return render(request, 'account/matches.html', {'title': 'Matches'})
 
 
-# Decorator to check if user is logged in before displaying profile
 @login_required
 def create_ad(request):
     if profile_is_incomplete(request.user):
         return redirect('account-home')
 
-    return render(request, 'account/create_ad.html', {'title': 'Create Ad'})
+    if request.method == 'POST':
+        # main form
+        form = CreateAdForm(request.POST)
+        # subform for location
+        subform = LocationSubform(request.POST)
+        # check if all inputs are correct
+        if form.is_valid() and subform.is_valid():
+            # delay the save for the main form
+            instance = form.save(commit=False)
+            # default to false because its just been created
+            instance.position_filled = False
+            # save the location
+            instance.location = subform.save()
+            # the creator id is the current user
+            instance.creator_id = request.user.musician.id
+            # add new ad to the database
+            instance.save()
+            msgs.success(request, f"New ad created successfully")
+            return redirect(create_ad)
+    else:
+        form = CreateAdForm()
+        subform = LocationSubform()
+    return render(request, 'account/create_ad.html', {'form': form, 'subform': subform})
 
 
 def register(request):
