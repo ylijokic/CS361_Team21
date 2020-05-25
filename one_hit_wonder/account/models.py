@@ -8,7 +8,7 @@ class Musician(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     location = models.ForeignKey('Location', on_delete=models.PROTECT)
     instruments = models.ManyToManyField('Instrument')
-    videos = models.ManyToManyField('Video')
+    videos = models.ManyToManyField('Video', blank=True)
     image = models.ImageField(default='default.jpg', upload_to='profile_pics', blank=True)
 
     def __str__(self):
