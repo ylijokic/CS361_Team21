@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.forms import ModelForm
 
-from .models import Musician, Instrument, Location, Video
+from .models import Advertisement, Musician, Instrument, Location, Video
 
 
 
