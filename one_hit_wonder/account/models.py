@@ -1,7 +1,6 @@
-from django.db import models
-
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
+from embed_video.fields import EmbedVideoField
 
 
 class Musician(models.Model):
@@ -9,7 +8,8 @@ class Musician(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     location = models.ForeignKey('Location', on_delete=models.PROTECT)
     instruments = models.ManyToManyField('Instrument')
-    image = models.ImageField(default='default.jpg', upload_to='profile_pics')
+    videos = models.ManyToManyField('Video')
+    image = models.ImageField(default='default.jpg', upload_to='profile_pics', blank=True)
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name}"
@@ -26,6 +26,12 @@ class Instrument(models.Model):
 
     skill_level = models.IntegerField(choices=Skill.choices)
 
+    def save(self, *args, **kwargs):
+        value = getattr(self, 'name', False)
+        if value:
+            setattr(self, 'name', value.capitalize())
+        super(Instrument, self).save(*args, **kwargs)
+
     def __str__(self):
         return f"{self.name} (Level {self.skill_level})"
 
@@ -34,6 +40,12 @@ class Location(models.Model):
     city = models.CharField(max_length=100)
     state = models.CharField(max_length=100)
     zip_code = models.CharField(max_length=10)
+
+    def save(self, *args, **kwargs):
+        value = getattr(self, 'city', False)
+        if value:
+            setattr(self, 'city', value.capitalize())
+        super(Location, self).save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.city}, {self.state} {self.zip_code}"
@@ -54,3 +66,10 @@ class Advertisement(models.Model):
                f"{self.creator.user.first_name} {self.creator.user.last_name} - " \
                f"{self.instrument.name} (Level {self.instrument.skill_level}) - " \
                f"{self.location.city}, {self.location.state}"
+
+
+class Video(models.Model):
+    video = EmbedVideoField()
+
+    def __str__(self):
+        return self.video
