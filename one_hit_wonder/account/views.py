@@ -33,6 +33,7 @@ def home(request):
         context['musician_form'] = MusicianProfileForm()
         context['location_form'] = LocationSubform()
         context['instrument_form'] = InstrumentSubform()
+        context['video_form'] = VideoSubform()
     return render(request, 'account/home.html', context)
 
 
@@ -41,7 +42,7 @@ def home(request):
 def profile(request):
     if profile_is_incomplete(request.user):
         return redirect('account-home')
-      
+
     # Grab the variables needed for Profile Page
     location = request.user.musician.location
     instruments = request.user.musician.instruments.get().name
@@ -49,7 +50,7 @@ def profile(request):
     work = request.user.musician.looking_for_work
     videos = request.user.musician.videos.all()
     ads = Advertisement.objects.filter(creator=request.user.musician.id)
-    
+
     accessToken = api_key
     context = {
         'title': 'Profile',
@@ -156,8 +157,12 @@ def update_profile(request):
             except ObjectDoesNotExist:
                 # If the user's musician profile wasn't completed yet, create a musician object based off of the forms,
                 # then associate the musician object with the user.
-                musician, musician_created = Musician.objects.get_or_create(**musician_form.cleaned_data, user=request.user, location=musician_location)
+                musician, musician_created = Musician.objects.get_or_create(
+                    **musician_form.cleaned_data,
+                    user=request.user,
+                    location=musician_location)
                 musician.instruments.set([musician_instrument])
+                musician.videos.add(musician_video)
                 musician.save()
             msgs.success(request, f"Your profile has been updated.")
             return redirect('account-profile')
