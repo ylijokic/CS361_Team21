@@ -114,7 +114,7 @@ def create_ad(request):
     return render(request, 'account/create_ad.html', {'form': form, 'subform': subform})
 
 def send_ad(request):
-    # retrieve form data from submit button
+   # retrieve form data from submit button
    # submit_btn = request.POST.get('submit')
 
     if request.method == 'POST':
@@ -123,17 +123,18 @@ def send_ad(request):
         musician_form = MusicianProfileForm(request.POST)
 
         if ad_form.is_valid() and location_form.is_valid() and musician_form.is_valid():
-            #get variables needed for appropriate musician to receive ad
+            # get variables needed for appropriate musician to receive ad
             ad_location = ad_form.cleaned_data.get('location')
             ad_instrument = ad_form.cleaned_data.get('name')
-            location = musician_form.cleaned_data.get('city')
-            instrument = musician_form.cleaned_data.getlist('instrument')
-            work = musician_form.cleaned_data.get('looking_for_work')
+            musician = Musician.objects.get(user=request.user)
+            musician.location = musician_form.cleaned_data.get('city')
+            musician.instrument = musician_form.cleaned_data.getlist('instrument')
+            musician.work = musician_form.cleaned_data.get('looking_for_work')
 
             # if user has selected looking for work, they will get an ad
-            if work == True:
+            if musician.work == True:
                 # checks if the instruments match and if locations match
-                if ad_instrument == instrument and ad_location == location:
+                if ad_instrument == musician.instrument and ad_location == musician.location:
                     context = {
                         'title': 'Ad',
                         'instruments': ad_instrument,
