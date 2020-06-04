@@ -124,6 +124,7 @@ def send_ad(request):
 
         if ad_form.is_valid() and location_form.is_valid() and musician_form.is_valid():
             # get variables needed for appropriate musician to receive ad
+            ad_creator = ad_form.cleaned_data.get('creator')
             ad_location = ad_form.cleaned_data.get('location')
             ad_instrument = ad_form.cleaned_data.get('name')
             musician = Musician.objects.get(user=request.user)
@@ -137,6 +138,7 @@ def send_ad(request):
                 if ad_instrument == musician.instrument and ad_location == musician.location:
                     context = {
                         'title': 'Ad',
+                        'creator': ad_creator,
                         'instruments': ad_instrument,
                         'location': ad_location
                     }
@@ -144,6 +146,8 @@ def send_ad(request):
                 context = {
                     'title': 'No New Ads'
                 }
+    #else:
+
     return render(request, 'account/matches.html', context)
 
 def register(request):
