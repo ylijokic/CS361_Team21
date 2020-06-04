@@ -97,8 +97,6 @@ def create_ad(request):
         if form.is_valid() and subform.is_valid():
             # delay the save for the main form
             instance = form.save(commit=False)
-            # default to false because its just been created
-            instance.position_filled = False
             # save the location
             ad_location, location_created = Location.objects.get_or_create(**subform.cleaned_data)
             instance.location = ad_location
@@ -128,8 +126,6 @@ def update_ad(request, pk):
         if form.is_valid() and subform.is_valid():
             # delay the save for the main form
             instance = form.save(commit=False)
-            # default to false because its just been created
-            instance.position_filled = False
             # save the location
             ad_location, location_created = Location.objects.get_or_create(**subform.cleaned_data)
             instance.location = ad_location
