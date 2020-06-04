@@ -117,31 +117,34 @@ def send_ad(request):
     # retrieve form data from submit button
     submit_btn = request.POST.get('submit')
 
-    ad_form = CreateAdForm(request.POST)
-    location_form = LocationSubform(request.POST)
-    musician_form = MusicianProfileForm(request.POST)
+    if request.method == 'POST':
+        ad_form = CreateAdForm(request.POST)
+        location_form = LocationSubform(request.POST)
+        musician_form = MusicianProfileForm(request.POST)
 
-    if ad_form.is_valid() and location_form.is_valid() and musician_form.is_valid() and instrument_form.is_valid():
-        #get variables needed for appropriate musician to receive ad
-        ad_location = ad_form.cleaned_data.get('location')
-        ad_instrument = ad_form.cleaned_data.get('name')
-        location = musician_form.cleaned_data.get('city')
-        instrument = musician_form.cleaned_data.getlist('instrument')
-        work = musician_form.cleaned_data.get('looking_for_work')
+        if ad_form.is_valid() and location_form.is_valid() and musician_form.is_valid():
+            #get variables needed for appropriate musician to receive ad
+            ad_location = ad_form.cleaned_data.get('location')
+            ad_instrument = ad_form.cleaned_data.get('name')
+            location = musician_form.cleaned_data.get('city')
+            instrument = musician_form.cleaned_data.getlist('instrument')
+            work = musician_form.cleaned_data.get('looking_for_work')
 
-        # if user has selected looking for work, they will get an ad
-        if work == True:
-            # checks if the instruments match and if locations match
-            if ad_instrument == instrument and ad_location == location:
+            # if user has selected looking for work, they will get an ad
+            if work == True:
+                # checks if the instruments match and if locations match
+                if ad_instrument == instrument and ad_location == location:
+                    context = {
+                        'title': 'Ad',
+                        'instruments': ad_instrument,
+                        'location': ad_location
+                    }
+            else:
                 context = {
-                    'title': 'Ad',
-                    'instruments': ad_instrument,
-                    'location': ad_location
+                    'title': 'No New Ads'
                 }
-        else:
-            context = {
-                'title': 'No New Ads'
-            }
+    else:
+        
     return render(request, 'account/matches.html', context)
 
 def register(request):
