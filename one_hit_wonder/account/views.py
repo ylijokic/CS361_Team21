@@ -107,12 +107,42 @@ def create_ad(request):
             # add new ad to the database
             instance.save()
             msgs.success(request, f"New ad created successfully")
-            return redirect(create_ad)
+            return redirect(profile)
     else:
         form = CreateAdForm()
         subform = LocationSubform()
     return render(request, 'account/create_ad.html', {'form': form, 'subform': subform})
 
+@login_required
+def update_ad(request, pk):
+    ad = Advertisement.objects.get(id=pk)
+    form = CreateAdForm(instance=ad)
+    print("TEST",ad.id)
+
+    if request.method == 'POST':
+        # main form
+        form = CreateAdForm(request.POST, instance=ad)
+        # subform for location
+        subform = LocationSubform(request.POST, instance=ad.location)
+        # check if all inputs are correct
+        if form.is_valid() and subform.is_valid():
+            # delay the save for the main form
+            instance = form.save(commit=False)
+            # default to false because its just been created
+            instance.position_filled = False
+            # save the location
+            ad_location, location_created = Location.objects.get_or_create(**subform.cleaned_data)
+            instance.location = ad_location
+            # the creator id is the current user
+            instance.creator_id = request.user.musician.id
+            # add new ad to the database
+            instance.save()
+            msgs.success(request, f"Ad updated successfully")
+            return redirect(profile)
+    else:
+        form = CreateAdForm(instance=ad)
+        subform = LocationSubform(instance=ad.location)
+    return render(request, 'account/create_ad.html', {'form': form, 'subform': subform})
 
 def register(request):
     # Check if the registration form request is a POST request
