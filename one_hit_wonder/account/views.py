@@ -115,7 +115,6 @@ def create_ad(request):
 def update_ad(request, pk):
     ad = Advertisement.objects.get(id=pk)
     form = CreateAdForm(instance=ad)
-    print("TEST",ad.id)
 
     if request.method == 'POST':
         # main form
@@ -150,7 +149,6 @@ def delete_ad(request, pk):
         ad.delete()
         msgs.success(request, f"Ad deleted successfully")
         return redirect(profile)
-
 
     return render(request, 'account/delete_ad.html', context)
 
