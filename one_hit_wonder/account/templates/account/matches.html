@@ -2,4 +2,16 @@
 
 {% block content %}
     <h1>Matches</h1>
+    {% if matches %}
+    <div class="ads col-med-3 m-2">
+        <h2>Your Matches:</h2>
+        <div class="media card mb-5 p-2" style="width: 31rem">
+            <ul>
+                {% for match in matches %}
+                    <li>{{ match }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
 {% endblock content %}

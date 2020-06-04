@@ -80,8 +80,29 @@ def matches(request):
     if profile_is_incomplete(request.user):
         return redirect('account-home')
 
-    return render(request, 'account/matches.html', {'title': 'Matches'})
+    matches = get_matches(request)
 
+    context = {
+        'title': 'Matches',
+        'matches': matches
+    }
+
+    return render(request, 'account/matches.html', context)
+
+def get_matches(request):
+    if not profile_is_incomplete(request.user) and request.user.musician.looking_for_work:
+        # We know we can find if there are any ads matching this user
+        # since their profile is complete and they are looking for work
+        musician = Musician.objects.get(user=request.user)
+        # Get the skill level of the musician's instrument
+        skill_level = musician.instruments.all()[0].skill_level
+        # Filter by open ads for the same state, instrument name and a skill level that's between one rank below
+        # and one rank above the logged in user's skill with that instrument
+        advertisements = Advertisement.objects.filter(position_filled=False,
+            location__state__exact=musician.location.state,
+            instrument__name__in=musician.instruments.all().values('name'),
+            instrument__skill_level__range=(skill_level-1, skill_level+1))
+        print(advertisements)
 
 @login_required
 def create_ad(request):
