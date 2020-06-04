@@ -70,7 +70,9 @@
                     <div class="media card mb-5 p-2" style="width: 31rem">
                         <ul>
                             {% for ad in ads %}
-                                <li>{{ ad }}</li><a href="{% url 'account-update_ad' ad.id %}"><button>Update</button></a>
+                                <li>{{ ad }}</li>
+                                <a href="{% url 'account-update_ad' ad.id %}" class="btn btn-sm btn-info">Update</a>
+                                <a href="{% url 'account-delete_ad' ad.id %}"class="btn btn-sm btn-danger">Delete</a>
                             {% endfor %}
                         </ul>
                     </div>

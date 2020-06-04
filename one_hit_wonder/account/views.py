@@ -144,6 +144,20 @@ def update_ad(request, pk):
         subform = LocationSubform(instance=ad.location)
     return render(request, 'account/create_ad.html', {'form': form, 'subform': subform})
 
+@login_required
+def delete_ad(request, pk):
+    ad = Advertisement.objects.get(id=pk)
+
+    context = { 'ad': ad }
+
+    if request.method == 'POST':
+        ad.delete()
+        msgs.success(request, f"Ad deleted successfully")
+        return redirect(profile)
+
+
+    return render(request, 'account/delete_ad.html', context)
+
 def register(request):
     # Check if the registration form request is a POST request
     if request.method == 'POST':
