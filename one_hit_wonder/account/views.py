@@ -115,7 +115,7 @@ def create_ad(request):
 
 def send_ad(request):
     # retrieve form data from submit button
-    submit_btn = request.POST.get('submit')
+   # submit_btn = request.POST.get('submit')
 
     if request.method == 'POST':
         ad_form = CreateAdForm(request.POST)
@@ -143,8 +143,6 @@ def send_ad(request):
                 context = {
                     'title': 'No New Ads'
                 }
-    else:
-        
     return render(request, 'account/matches.html', context)
 
 def register(request):
