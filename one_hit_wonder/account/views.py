@@ -126,11 +126,17 @@ def matches(request):
     if request.method == 'POST' :
         subform = StateSubform(request.POST)
         instance = subform.save(commit=False)
-        state = instance.state
+        if hasattr(instance, 'state'):
+            state = instance.state
+            SearchAdForm
+            ads = Advertisement.objects.filter(position_filled=False, location__state=state)
         form = SearchAdForm(request.POST)
         instance = form.save(commit=False)
-        instrument = instance.instrument
-        ads = Advertisement.objects.filter(position_filled=False, location__state=state, instrument__name=instrument.name)
+        if hasattr(instance, 'instrument'):
+            instrument = instance.instrument
+            ads = Advertisement.objects.filter(position_filled=False, instrument__name=instrument.name)
+        if hasattr(instance, 'state') and hasattr(instance, 'instrument'):
+            ads = Advertisement.objects.filter(position_filled=False, location__state=state, instrument__name=instrument.name)
     else:
         ads = Advertisement.objects.filter(position_filled=False).order_by('location__state', 'instrument__name')
 
