@@ -37,10 +37,11 @@
                             <span class="badge badge-danger">Not Currently Seeking Work</span>
                         {% endif %}
                     </div>
-
+                    {% if other is not True %}
                     <div class="border-top pt-3 w-100 text-center">
                         <a href="{% url 'account-profile-update' %}" class="btn btn-outline-info" role="button">Update Profile</a>
                     </div>
+                    {% endif %}
 
                 </div>
             </div>

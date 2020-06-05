@@ -8,6 +8,7 @@ urlpatterns = [
     path('', views.landing, name='account-landing'),
     path('home/', views.home, name='account-home'),
     path('profile/', views.profile, name='account-profile'),
+    path('profile/<str:pk>', views.profile_other, name='account-profile-other'),
     path('profile/update/', views.update_profile, name='account-profile-update'),
     path('messages/', views.messages, name='account-messages'),
     path('matches/', views.matches, name='account-matches'),

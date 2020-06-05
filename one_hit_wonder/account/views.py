@@ -70,6 +70,40 @@ def profile(request):
     }
     return render(request, 'account/profile.html', context)
 
+# View to display other user's profile
+@login_required
+def profile_other(request, pk):
+    if profile_is_incomplete(request.user):
+        return redirect('account-home')
+
+    musician = Musician.objects.get(id=pk)
+
+    # Grab the variables needed for Profile Page
+    location = musician.location
+    instruments = musician.instruments.get().name
+    skill = musician.instruments.get().skill_level
+    work = musician.looking_for_work
+    videos = musician.videos.all()
+    phone = musician.phone
+    twitter = musician.twitter
+    instagram = musician.instagram
+
+    accessToken = api_key
+    context = {
+        'title': 'Profile',
+        'user': musician.user,
+        'location': location,
+        'instruments': instruments,
+        'skill': range(skill),
+        'work': work,
+        'videos': videos,
+        'phone': phone,
+        'twitter': twitter,
+        'instagram': instagram,
+        'accessToken': accessToken,
+        'other': True,
+    }
+    return render(request, 'account/profile.html', context)
 
 # Decorator to check if user is logged in before displaying profile
 @login_required
