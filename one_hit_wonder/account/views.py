@@ -79,15 +79,10 @@ def messages(request):
 def matches(request):
     if profile_is_incomplete(request.user):
         return redirect('account-home')
-
-    matches = get_matches(request)
-
-    context = {
-        'title': 'Matches',
-        'matches': matches
-    }
-
-    return render(request, 'account/matches.html', context)
+  
+    get_matches(request)
+    
+    return render(request, 'account/matches.html', {'queryset': matches})
 
 def get_matches(request):
     if not profile_is_incomplete(request.user) and request.user.musician.looking_for_work:
@@ -98,11 +93,11 @@ def get_matches(request):
         skill_level = musician.instruments.all()[0].skill_level
         # Filter by open ads for the same state, instrument name and a skill level that's between one rank below
         # and one rank above the logged in user's skill with that instrument
-        advertisements = Advertisement.objects.filter(position_filled=False,
+        matches = Advertisement.objects.filter(position_filled=False,
             location__state__exact=musician.location.state,
             instrument__name__in=musician.instruments.all().values('name'),
             instrument__skill_level__range=(skill_level-1, skill_level+1))
-        print(advertisements)
+        print(matches)
 
 @login_required
 def create_ad(request):
@@ -133,43 +128,6 @@ def create_ad(request):
         form = CreateAdForm()
         subform = LocationSubform()
     return render(request, 'account/create_ad.html', {'form': form, 'subform': subform})
-
-def send_ad(request):
-   # retrieve form data from submit button
-   # submit_btn = request.POST.get('submit')
-
-    if request.method == 'POST':
-        ad_form = CreateAdForm(request.POST)
-        location_form = LocationSubform(request.POST)
-        musician_form = MusicianProfileForm(request.POST)
-
-        if ad_form.is_valid() and location_form.is_valid() and musician_form.is_valid():
-            # get variables needed for appropriate musician to receive ad
-            ad_creator = ad_form.cleaned_data.get('creator')
-            ad_location = ad_form.cleaned_data.get('location')
-            ad_instrument = ad_form.cleaned_data.get('name')
-            musician = Musician.objects.get(user=request.user)
-            musician.location = musician_form.cleaned_data.get('city')
-            musician.instrument = musician_form.cleaned_data.getlist('instrument')
-            musician.work = musician_form.cleaned_data.get('looking_for_work')
-
-            # if user has selected looking for work, they will get an ad
-            if musician.work == True:
-                # checks if the instruments match and if locations match
-                if ad_instrument == musician.instrument and ad_location == musician.location:
-                    context = {
-                        'title': 'Ad',
-                        'creator': ad_creator,
-                        'instruments': ad_instrument,
-                        'location': ad_location
-                    }
-            else:
-                context = {
-                    'title': 'No New Ads'
-                }
-    #else:
-
-    return render(request, 'account/matches.html', context)
 
 def register(request):
     # Check if the registration form request is a POST request
