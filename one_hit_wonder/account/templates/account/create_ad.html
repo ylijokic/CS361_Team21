@@ -2,11 +2,12 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <h1>Create Ad</h1>
+    <h1>{{ action }} Advertisement</h1>
     <form method="post">
         {% csrf_token %}
         {{ form|crispy }}
-        {{ subform|crispy }}
+        {{ instrument_form|crispy }}
+        {{ location_form|crispy }}
         <input type="submit" value="submit">
     </form>
 {% endblock content %}

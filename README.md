@@ -35,7 +35,7 @@ To run the application locally:
 3. Install dependencies.
 4. Run the server.
 
-**Note:** Running the application locally requires a Mapbox access token. You can sign up for a Mapbox account [here](https://www.mapbox.com/signup/). Once your account is created, copy your default public token from your Mapbox account's [access tokens page](https://account.mapbox.com/access-tokens/), then create a new file named `config.py` in the [CS361_Team21/one_hit_wonder/account](https://github.com/ylijokic/CS361_Team21/tree/master/one_hit_wonder/account) directory. The config.py file consists of a single line: `api_token = 'YOUR_MAPBOX_ACCESS_TOKEN'`. Once the config.py file is saved, the application will start successfully in development mode.
+**Note:** Running the application locally requires a Mapbox access token. You can sign up for a Mapbox account [here](https://www.mapbox.com/signup/). Once your account is created, copy your default public token from your Mapbox account's [access tokens page](https://account.mapbox.com/access-tokens/), then create a new file named `config.py` in the [CS361_Team21/one_hit_wonder/account](https://github.com/ylijokic/CS361_Team21/tree/master/one_hit_wonder/account) directory. The config.py file consists of a single line: `api_key = 'YOUR_MAPBOX_ACCESS_TOKEN'`. Once the config.py file is saved, the application will start successfully in development mode.
 
 ## Example Usage
 ```
