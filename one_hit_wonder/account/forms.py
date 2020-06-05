@@ -7,7 +7,8 @@ from .models import Advertisement, Musician, Instrument, Location, Video
 
 
 # Helper widget to populate existing database entries as well as allow
-# custom data entry
+# custom data entry.
+# Source: https://stackoverflow.com/questions/24783275/django-form-with-choices-but-also-with-freetext-option
 class ListTextWidget(forms.TextInput):
     def __init__(self, data_list, name, *args, **kwargs):
         super(ListTextWidget, self).__init__(*args, **kwargs)
