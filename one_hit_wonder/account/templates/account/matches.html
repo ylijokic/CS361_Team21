@@ -1,5 +1,24 @@
 {% extends "account/base.html" %}
+{% load crispy_forms_tags %}
 
 {% block content %}
     <h1>Matches</h1>
+    <form action="{% url 'account-matches'%}" method="post">
+        {% csrf_token %}
+        {{ form | crispy}}
+        {{ subform | crispy}}
+        <input type="submit" value="Submit">
+    </form>
+    {% if ads %}
+    <div class="ads col-med-3 m-2">
+        <h2>Matching Ads:</h2>
+        <div class="media card mb-5 p-2" style="width: 31rem">
+            <ul>
+                {% for ad in ads %}
+                    <li>{{ ad }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
 {% endblock content %}

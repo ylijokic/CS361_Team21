@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic import TemplateView
 
-from .forms import UserRegisterForm, CreateAdForm, MusicianProfileForm, InstrumentSubform, LocationSubform, VideoSubform
+from .forms import UserRegisterForm, CreateAdForm, MusicianProfileForm, InstrumentSubform, LocationSubform, VideoSubform, SearchAdForm, StateSubform
 from .models import Musician, Location, Instrument, Advertisement, Video
 from .config import api_key
 
@@ -80,7 +80,20 @@ def matches(request):
     if profile_is_incomplete(request.user):
         return redirect('account-home')
 
-    return render(request, 'account/matches.html', {'title': 'Matches'})
+    form = SearchAdForm()
+    subform = StateSubform()
+
+    if request.method == 'POST' :
+        subform = StateSubform(request.POST)
+        instance = subform.save(commit=False)
+        state = instance.state
+        form = SearchAdForm(request.POST)
+        instance = form.save(commit=False)
+        instrument = instance.instrument
+        ads = Advertisement.objects.filter(location__state=state, instrument__name=instrument.name)
+        return render(request, 'account/matches.html', { 'form': form, 'subform': subform, 'ads': ads})
+    else:
+        return render(request, 'account/matches.html', { 'form': form, 'subform': subform })
 
 
 @login_required

@@ -11,6 +11,7 @@ urlpatterns = [
     path('profile/update/', views.update_profile, name='account-profile-update'),
     path('messages/', views.messages, name='account-messages'),
     path('matches/', views.matches, name='account-matches'),
+    path('matches/<str:state>/<str:instrument>', views.matches, name='account-matches'),
     path('create_ad/', views.create_ad, name='account-create_ad'),
     path('update_ad/<str:pk>', views.update_ad, name='account-update_ad'),
     path('delete_ad/<str:pk>', views.delete_ad, name='account-delete_ad'),

@@ -121,3 +121,16 @@ class CreateAdForm(ModelForm):
         labels = {
             'position_filled': 'Is the position already filled?'
         }
+
+# class for the ads search page
+class SearchAdForm(ModelForm):
+    class Meta:
+        model = Advertisement
+        fields = ['instrument']
+
+# subfrom for State
+class StateSubform(ModelForm):
+    state = forms.ChoiceField(choices=STATES)
+    class Meta:
+        model = Location
+        fields = ['state']
