@@ -224,6 +224,18 @@ def register(request):
 
 
 def update_profile(request):
+    # Gather all known, unique instruments and locations in the database.
+    # This allows users to utilize the names of existing
+    # instruments and locations when entering the subforms.
+    city_list = []
+    instrument_list = []
+    location_cities = Location.objects.all().order_by('city').values('city').distinct()
+    instrument_names = Instrument.objects.all().order_by('name').values('name').distinct()
+    for location in location_cities:
+        city_list.append(location['city'])
+    for instrument in instrument_names:
+        instrument_list.append(instrument['name'])
+
     # Check if the profile update form request is a POST request.
     if request.method == 'POST':
         # Get the data submitted in the three combined forms.
@@ -278,11 +290,11 @@ def update_profile(request):
             'city': current_location.city,
             'state': current_location.state,
             'zip_code': current_location.zip_code
-        })
+        }, data_list=city_list)
         instrument_form = InstrumentSubform(initial={
             'name': current_instrument.name,
             'skill_level': current_instrument.skill_level
-        })
+        }, data_list=instrument_list)
         video_form = VideoSubform()
     return render(request, 'account/complete_profile.html', {
         'title': 'Update Profile',
