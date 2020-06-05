@@ -36,7 +36,14 @@ class Instrument(models.Model):
         super(Instrument, self).save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.name} (Level {self.skill_level})"
+        skill_string = {
+            1: 'Amateur',
+            2: 'Intermediate',
+            3: 'Advanced',
+            4: 'Virtuoso'
+        }
+
+        return f"{self.name} ({skill_string[self.skill_level]})"
 
 
 class Location(models.Model):
@@ -61,7 +68,7 @@ class Advertisement(models.Model):
     location = models.ForeignKey(Location, models.PROTECT)
 
     def __str__(self):
-        if self.position_filled == False:
+        if not self.position_filled:
             status = 'OPEN'
         else:
             status = 'CLOSED'
