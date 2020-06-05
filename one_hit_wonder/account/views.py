@@ -82,7 +82,7 @@ def matches(request):
   
     get_matches(request)
     
-    return render(request, 'account/matches.html', {'queryset': matches})
+    return render(request, 'account/matches.html', {'matches': matches})
 
 def get_matches(request):
     if not profile_is_incomplete(request.user) and request.user.musician.looking_for_work:
