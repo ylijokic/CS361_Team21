@@ -10,6 +10,9 @@ class Musician(models.Model):
     instruments = models.ManyToManyField('Instrument')
     videos = models.ManyToManyField('Video', blank=True)
     image = models.ImageField(default='default.jpg', upload_to='profile_pics', blank=True)
+    phone = models.CharField(max_length=100, blank=True)
+    twitter = models.URLField(max_length=100, blank=True)
+    instagram = models.URLField(max_length=100, blank=True)
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name}"

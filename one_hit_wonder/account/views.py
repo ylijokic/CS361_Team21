@@ -49,6 +49,9 @@ def profile(request):
     skill = request.user.musician.instruments.get().skill_level
     work = request.user.musician.looking_for_work
     videos = request.user.musician.videos.all()
+    phone = request.user.musician.phone
+    twitter = request.user.musician.twitter
+    instagram = request.user.musician.instagram
     ads = Advertisement.objects.filter(creator=request.user.musician.id)
 
     accessToken = api_key
@@ -59,6 +62,9 @@ def profile(request):
         'skill': range(skill),
         'work': work,
         'videos': videos,
+        'phone': phone,
+        'twitter': twitter, 
+        'instagram': instagram,
         'accessToken': accessToken,
         'ads': ads  # Query ads and filter for the current user
     }
@@ -155,6 +161,9 @@ def update_profile(request):
                 musician.videos.add(musician_video)
                 musician.looking_for_work = musician_form.cleaned_data.get('looking_for_work')
                 musician.image = musician_form.cleaned_data.get('image')
+                musician.phone = musician_form.cleaned_data.get('phone')
+                musician.twitter = musician_form.cleaned_data.get('twitter')
+                musician.instagram = musician_form.cleaned_data.get('instagram')
                 musician.save()
             except ObjectDoesNotExist:
                 # If the user's musician profile wasn't completed yet, create a musician object based off of the forms,

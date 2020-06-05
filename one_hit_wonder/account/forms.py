@@ -20,10 +20,13 @@ class UserRegisterForm(UserCreationForm):
 class MusicianProfileForm(ModelForm):
     class Meta:
         model = Musician
-        fields = ('image', 'looking_for_work',)
+        fields = ('image', 'looking_for_work', 'phone', 'twitter', 'instagram')
         labels = {
             'looking_for_work': 'I want to join a band',
             'image': 'Profile Picture',
+            'phone': 'Phone Number',
+            'twitter': 'Twitter',
+            'instagram': 'Instagram',
         }
 
 
