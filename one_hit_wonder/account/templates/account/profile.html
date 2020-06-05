@@ -71,6 +71,8 @@
                         <ul>
                             {% for ad in ads %}
                                 <li>{{ ad }}</li>
+                                <a href="{% url 'account-update_ad' ad.id %}" class="btn btn-sm btn-info">Update</a>
+                                <a href="{% url 'account-delete_ad' ad.id %}"class="btn btn-sm btn-danger">Delete</a>
                             {% endfor %}
                         </ul>
                     </div>
