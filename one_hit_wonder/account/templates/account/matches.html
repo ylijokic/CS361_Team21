@@ -7,7 +7,7 @@
         {% csrf_token %}
         {{ form | crispy}}
         {{ subform | crispy}}
-        <input type="submit" value="Submit">
+        <input type="submit" value="Filter">
     </form>
     {% if ads %}
     <div class="ads col-med-3 m-2">
