@@ -11,11 +11,14 @@
     </form>
     {% if ads %}
     <div class="ads col-med-3 m-2">
-        <h2>Matching Ads:</h2>
-        <div class="media card mb-5 p-2" style="width: 31rem">
+        <h2>Ads List:</h2>
+        <div class="media card mb-5 p-2">
             <ul>
                 {% for ad in ads %}
-                    <li>{{ ad }} <a href="{% url 'account-profile-other' ad.creator.id %}" class="btn btn-sm btn-outline-info">Contact</a></li>
+                    <li>
+                        <a href="{% url 'account-profile-other' ad.creator.id %}" class="btn btn-sm btn-outline-info">Contact</a>
+                         {{ ad }}
+                    </li>
                 {% endfor %}
             </ul>
         </div>

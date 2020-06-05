@@ -130,10 +130,11 @@ def matches(request):
         form = SearchAdForm(request.POST)
         instance = form.save(commit=False)
         instrument = instance.instrument
-        ads = Advertisement.objects.filter(location__state=state, instrument__name=instrument.name)
-        return render(request, 'account/matches.html', { 'form': form, 'subform': subform, 'ads': ads})
+        ads = Advertisement.objects.filter(position_filled=False, location__state=state, instrument__name=instrument.name)
     else:
-        return render(request, 'account/matches.html', { 'form': form, 'subform': subform })
+        ads = Advertisement.objects.filter(position_filled=False).order_by('location__state', 'instrument__name')
+
+    return render(request, 'account/matches.html', { 'form': form, 'subform': subform, 'ads': ads})
 
 
 @login_required
