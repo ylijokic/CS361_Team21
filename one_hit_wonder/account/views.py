@@ -63,7 +63,7 @@ def profile(request):
         'work': work,
         'videos': videos,
         'phone': phone,
-        'twitter': twitter, 
+        'twitter': twitter,
         'instagram': instagram,
         'accessToken': accessToken,
         'ads': ads  # Query ads and filter for the current user
@@ -98,24 +98,36 @@ def create_ad(request):
         # main form
         form = CreateAdForm(request.POST)
         # subform for location
-        subform = LocationSubform(request.POST)
+        location_form = LocationSubform(request.POST)
+        # subform for instrument
+        instrument_form = InstrumentSubform(request.POST)
         # check if all inputs are correct
-        if form.is_valid() and subform.is_valid():
+        if form.is_valid() and location_form.is_valid() and instrument_form.is_valid():
             # delay the save for the main form
             instance = form.save(commit=False)
             # save the location
-            ad_location, location_created = Location.objects.get_or_create(**subform.cleaned_data)
+            ad_location, location_created = Location.objects.get_or_create(**location_form.cleaned_data)
+            # save the instrument
+            ad_instrument, instrument_created = Instrument.objects.get_or_create(**instrument_form.cleaned_data)
             instance.location = ad_location
-            # the creator id is the current user
-            instance.creator_id = request.user.musician.id
+            instance.instrument = ad_instrument
+            # the creator is the current user
+            instance.creator = request.user.musician
             # add new ad to the database
             instance.save()
             msgs.success(request, f"New ad created successfully")
             return redirect(profile)
     else:
         form = CreateAdForm()
-        subform = LocationSubform()
-    return render(request, 'account/create_ad.html', {'form': form, 'subform': subform})
+        location_form = LocationSubform()
+        instrument_form = InstrumentSubform()
+    return render(request, 'account/create_ad.html', {'action': 'Create New',
+                                                      'title': 'Create Advertisement',
+                                                      'form': form,
+                                                      'location_form': location_form,
+                                                      'instrument_form': instrument_form
+                                                      })
+
 
 @login_required
 def update_ad(request, pk):
@@ -126,30 +138,42 @@ def update_ad(request, pk):
         # main form
         form = CreateAdForm(request.POST, instance=ad)
         # subform for location
-        subform = LocationSubform(request.POST, instance=ad.location)
+        location_form = LocationSubform(request.POST, instance=ad.location)
+        # subform for instrument
+        instrument_form = InstrumentSubform(request.POST, instance=ad.instrument)
         # check if all inputs are correct
-        if form.is_valid() and subform.is_valid():
+        if form.is_valid() and location_form.is_valid() and instrument_form.is_valid():
             # delay the save for the main form
             instance = form.save(commit=False)
             # save the location
-            ad_location, location_created = Location.objects.get_or_create(**subform.cleaned_data)
+            ad_location, location_created = Location.objects.get_or_create(**location_form.cleaned_data)
+            # save the instrument
+            ad_instrument, instrument_created = Instrument.objects.get_or_create(**instrument_form.cleaned_data)
             instance.location = ad_location
-            # the creator id is the current user
-            instance.creator_id = request.user.musician.id
+            instance.instrument = ad_instrument
+            # the creator is the current user
+            instance.creator = request.user.musician
             # add new ad to the database
             instance.save()
             msgs.success(request, f"Ad updated successfully")
             return redirect(profile)
     else:
         form = CreateAdForm(instance=ad)
-        subform = LocationSubform(instance=ad.location)
-    return render(request, 'account/create_ad.html', {'form': form, 'subform': subform})
+        location_form = LocationSubform(instance=ad.location)
+        instrument_form = InstrumentSubform(instance=ad.instrument)
+    return render(request, 'account/create_ad.html', {'action': 'Update',
+                                                      'title': 'Update Advertisement',
+                                                      'form': form,
+                                                      'location_form': location_form,
+                                                      'instrument_form': instrument_form
+                                                      })
+
 
 @login_required
 def delete_ad(request, pk):
     ad = Advertisement.objects.get(id=pk)
 
-    context = { 'ad': ad }
+    context = {'ad': ad}
 
     if request.method == 'POST':
         ad.delete()
@@ -157,6 +181,7 @@ def delete_ad(request, pk):
         return redirect(profile)
 
     return render(request, 'account/delete_ad.html', context)
+
 
 def register(request):
     # Check if the registration form request is a POST request
@@ -236,6 +261,7 @@ def update_profile(request):
         })
         video_form = VideoSubform()
     return render(request, 'account/complete_profile.html', {
+        'title': 'Update Profile',
         'musician_form': musician_form,
         'location_form': location_form,
         'instrument_form': instrument_form,

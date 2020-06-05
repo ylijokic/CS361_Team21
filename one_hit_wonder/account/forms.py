@@ -120,7 +120,7 @@ class VideoSubform(ModelForm):
 class CreateAdForm(ModelForm):
     class Meta:
         model = Advertisement
-        fields = ['position_filled', 'instrument']
+        fields = ('position_filled',)
         labels = {
             'position_filled': 'Is the position already filled?'
         }
