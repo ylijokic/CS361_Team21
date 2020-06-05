@@ -154,3 +154,24 @@ class CreateAdForm(ModelForm):
         labels = {
             'position_filled': 'Is the position already filled?'
         }
+
+# class for the ads search page
+class SearchAdForm(ModelForm):
+    class Meta:
+        model = Advertisement
+        fields = ['instrument']
+
+    def __init__(self, *args, **kwargs):
+        super(SearchAdForm, self).__init__(*args, **kwargs)
+        self.fields['instrument'].required = False
+
+# subfrom for State
+class StateSubform(ModelForm):
+    state = forms.ChoiceField(choices=STATES)
+    class Meta:
+        model = Location
+        fields = ['state']
+
+    def __init__(self, *args, **kwargs):
+        super(StateSubform, self).__init__(*args, **kwargs)
+        self.fields['state'].required = False

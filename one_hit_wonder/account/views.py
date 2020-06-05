@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic import TemplateView
 
-from .forms import UserRegisterForm, CreateAdForm, MusicianProfileForm, InstrumentSubform, LocationSubform, VideoSubform
+from .forms import UserRegisterForm, CreateAdForm, MusicianProfileForm, InstrumentSubform, LocationSubform, VideoSubform, SearchAdForm, StateSubform
 from .models import Musician, Location, Instrument, Advertisement, Video
 from .config import api_key
 
@@ -72,6 +72,40 @@ def profile(request):
     }
     return render(request, 'account/profile.html', context)
 
+# View to display other user's profile
+@login_required
+def profile_other(request, pk):
+    if profile_is_incomplete(request.user):
+        return redirect('account-home')
+
+    musician = Musician.objects.get(id=pk)
+
+    # Grab the variables needed for Profile Page
+    location = musician.location
+    instruments = musician.instruments.get().name
+    skill = musician.instruments.get().skill_level
+    work = musician.looking_for_work
+    videos = musician.videos.all()
+    phone = musician.phone
+    twitter = musician.twitter
+    instagram = musician.instagram
+
+    accessToken = api_key
+    context = {
+        'title': 'Profile',
+        'user': musician.user,
+        'location': location,
+        'instruments': instruments,
+        'skill': range(skill),
+        'work': work,
+        'videos': videos,
+        'phone': phone,
+        'twitter': twitter,
+        'instagram': instagram,
+        'accessToken': accessToken,
+        'other': True,
+    }
+    return render(request, 'account/profile.html', context)
 
 # Decorator to check if user is logged in before displaying profile
 @login_required
@@ -88,7 +122,29 @@ def matches(request):
     if profile_is_incomplete(request.user):
         return redirect('account-home')
 
-    return render(request, 'account/matches.html', {'title': 'Matches'})
+    form = SearchAdForm()
+    subform = StateSubform()
+
+    if request.method == 'POST' :
+        subform = StateSubform(request.POST)
+        instance = subform.save(commit=False)
+        if hasattr(instance, 'state'):
+            state = instance.state
+            SearchAdForm
+            ads = Advertisement.objects.filter(position_filled=False, location__state=state)
+        form = SearchAdForm(request.POST)
+        instance = form.save(commit=False)
+        if hasattr(instance, 'instrument'):
+            instrument = instance.instrument
+            ads = Advertisement.objects.filter(position_filled=False, instrument__name=instrument.name)
+        if hasattr(instance, 'state') and hasattr(instance, 'instrument'):
+            ads = Advertisement.objects.filter(position_filled=False, location__state=state, instrument__name=instrument.name)
+        if not hasattr(instance, 'state') and not hasattr(instance, 'instrument'):
+            ads = Advertisement.objects.filter(position_filled=False).order_by('location__state', 'instrument__name')
+    else:
+        ads = Advertisement.objects.filter(position_filled=False).order_by('location__state', 'instrument__name')
+
+    return render(request, 'account/matches.html', { 'form': form, 'subform': subform, 'ads': ads})
 
 
 @login_required

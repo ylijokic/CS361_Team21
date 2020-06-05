@@ -1,5 +1,27 @@
 {% extends "account/base.html" %}
+{% load crispy_forms_tags %}
 
 {% block content %}
     <h1>Matches</h1>
+    <form action="{% url 'account-matches'%}" method="post">
+        {% csrf_token %}
+        {{ form | crispy}}
+        {{ subform | crispy}}
+        <input type="submit" value="Filter">
+    </form>
+    {% if ads %}
+    <div class="ads col-med-3 m-2">
+        <h2>Ads List:</h2>
+        <div class="media card mb-5 p-2">
+            <ul>
+                {% for ad in ads %}
+                    <li>
+                        <a href="{% url 'account-profile-other' ad.creator.id %}" class="btn btn-sm btn-outline-info">Contact</a>
+                         {{ ad }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
 {% endblock content %}
