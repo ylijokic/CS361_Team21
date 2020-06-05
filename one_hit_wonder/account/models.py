@@ -32,7 +32,7 @@ class Instrument(models.Model):
     def save(self, *args, **kwargs):
         value = getattr(self, 'name', False)
         if value:
-            setattr(self, 'name', value.capitalize())
+            setattr(self, 'name', value.title())
         super(Instrument, self).save(*args, **kwargs)
 
     def __str__(self):
@@ -54,7 +54,7 @@ class Location(models.Model):
     def save(self, *args, **kwargs):
         value = getattr(self, 'city', False)
         if value:
-            setattr(self, 'city', value.capitalize())
+            setattr(self, 'city', value.title())
         super(Location, self).save(*args, **kwargs)
 
     def __str__(self):
