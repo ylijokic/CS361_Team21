@@ -137,6 +137,8 @@ def matches(request):
             ads = Advertisement.objects.filter(position_filled=False, instrument__name=instrument.name)
         if hasattr(instance, 'state') and hasattr(instance, 'instrument'):
             ads = Advertisement.objects.filter(position_filled=False, location__state=state, instrument__name=instrument.name)
+        if not hasattr(instance, 'state') and not hasattr(instance, 'instrument'):
+            ads = Advertisement.objects.filter(position_filled=False).order_by('location__state', 'instrument__name')
     else:
         ads = Advertisement.objects.filter(position_filled=False).order_by('location__state', 'instrument__name')
 
