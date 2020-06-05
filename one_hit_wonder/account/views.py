@@ -94,6 +94,18 @@ def create_ad(request):
     if profile_is_incomplete(request.user):
         return redirect('account-home')
 
+    # Gather all known, unique instruments and locations in the database.
+    # This allows users to utilize the names of existing
+    # instruments and locations when entering the subforms.
+    city_list = []
+    instrument_list = []
+    location_cities = Location.objects.all().order_by('city').values('city').distinct()
+    instrument_names = Instrument.objects.all().order_by('name').values('name').distinct()
+    for location in location_cities:
+        city_list.append(location['city'])
+    for instrument in instrument_names:
+        instrument_list.append(instrument['name'])
+
     if request.method == 'POST':
         # main form
         form = CreateAdForm(request.POST)
@@ -119,8 +131,8 @@ def create_ad(request):
             return redirect(profile)
     else:
         form = CreateAdForm()
-        location_form = LocationSubform()
-        instrument_form = InstrumentSubform()
+        location_form = LocationSubform(data_list=city_list)
+        instrument_form = InstrumentSubform(data_list=instrument_list)
     return render(request, 'account/create_ad.html', {'action': 'Create New',
                                                       'title': 'Create Advertisement',
                                                       'form': form,
@@ -133,6 +145,18 @@ def create_ad(request):
 def update_ad(request, pk):
     ad = Advertisement.objects.get(id=pk)
     form = CreateAdForm(instance=ad)
+
+    # Gather all known, unique instruments and locations in the database.
+    # This allows users to utilize the names of existing
+    # instruments and locations when entering the subforms.
+    city_list = []
+    instrument_list = []
+    location_cities = Location.objects.all().order_by('city').values('city').distinct()
+    instrument_names = Instrument.objects.all().order_by('name').values('name').distinct()
+    for location in location_cities:
+        city_list.append(location['city'])
+    for instrument in instrument_names:
+        instrument_list.append(instrument['name'])
 
     if request.method == 'POST':
         # main form
@@ -159,8 +183,8 @@ def update_ad(request, pk):
             return redirect(profile)
     else:
         form = CreateAdForm(instance=ad)
-        location_form = LocationSubform(instance=ad.location)
-        instrument_form = InstrumentSubform(instance=ad.instrument)
+        location_form = LocationSubform(instance=ad.location, data_list=city_list)
+        instrument_form = InstrumentSubform(instance=ad.instrument, data_list=instrument_list)
     return render(request, 'account/create_ad.html', {'action': 'Update',
                                                       'title': 'Update Advertisement',
                                                       'form': form,
