@@ -15,7 +15,7 @@
         <div class="media card mb-5 p-2" style="width: 31rem">
             <ul>
                 {% for ad in ads %}
-                    <li>{{ ad }}</li>
+                    <li>{{ ad }} <a href="{% url 'account-profile-other' ad.creator.id %}" class="btn btn-sm btn-outline-info">Contact</a></li>
                 {% endfor %}
             </ul>
         </div>
