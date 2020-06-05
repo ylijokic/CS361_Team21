@@ -68,13 +68,20 @@ class Advertisement(models.Model):
     location = models.ForeignKey(Location, models.PROTECT)
 
     def __str__(self):
+        skill_string = {
+            1: 'Amateur',
+            2: 'Intermediate',
+            3: 'Advanced',
+            4: 'Virtuoso'
+        }
+
         if not self.position_filled:
             status = 'OPEN'
         else:
             status = 'CLOSED'
         return f"[{status}] " \
                f"{self.creator.user.first_name} {self.creator.user.last_name} - " \
-               f"{self.instrument.name} (Level {self.instrument.skill_level}) - " \
+               f"{self.instrument.name} ({skill_string[self.instrument.skill_level]}) - " \
                f"{self.location.city}, {self.location.state}"
 
 
