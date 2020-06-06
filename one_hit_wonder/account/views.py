@@ -79,10 +79,39 @@ def messages(request):
 def matches(request):
     if profile_is_incomplete(request.user):
         return redirect('account-home')
+<<<<<<< Updated upstream
   
     get_matches(request)
     
     return render(request, 'account/matches.html', {'matches': matches})
+=======
+
+    match_ads = get_matches(request)
+
+    form = SearchAdForm()
+    subform = StateSubform()
+
+    if request.method == 'POST' :
+        subform = StateSubform(request.POST)
+        instance = subform.save(commit=False)
+        if hasattr(instance, 'state'):
+            state = instance.state
+            SearchAdForm
+            ads = Advertisement.objects.filter(position_filled=False, location__state=state)
+        form = SearchAdForm(request.POST)
+        instance = form.save(commit=False)
+        if hasattr(instance, 'instrument'):
+            instrument = instance.instrument
+            ads = Advertisement.objects.filter(position_filled=False, instrument__name=instrument.name)
+        if hasattr(instance, 'state') and hasattr(instance, 'instrument'):
+            ads = Advertisement.objects.filter(position_filled=False, location__state=state, instrument__name=instrument.name)
+        if not hasattr(instance, 'state') and not hasattr(instance, 'instrument'):
+            ads = Advertisement.objects.filter(position_filled=False).order_by('location__state', 'instrument__name')
+    else:
+        ads = Advertisement.objects.filter(position_filled=False).order_by('location__state', 'instrument__name')
+
+    return render(request, 'account/matches.html', { 'form': form, 'subform': subform, 'match_ads': match_ads, 'ads': ads})
+>>>>>>> Stashed changes
 
 def get_matches(request):
     if not profile_is_incomplete(request.user) and request.user.musician.looking_for_work:
@@ -93,11 +122,20 @@ def get_matches(request):
         skill_level = musician.instruments.all()[0].skill_level
         # Filter by open ads for the same state, instrument name and a skill level that's between one rank below
         # and one rank above the logged in user's skill with that instrument
+<<<<<<< Updated upstream
         matches = Advertisement.objects.filter(position_filled=False,
             location__state__exact=musician.location.state,
             instrument__name__in=musician.instruments.all().values('name'),
             instrument__skill_level__range=(skill_level-1, skill_level+1))
         print(matches)
+=======
+        match_ads = Advertisement.objects.filter(position_filled=False,
+            location__state__exact=musician.location.state,
+            instrument__name__in=musician.instruments.all().values('name'),
+            instrument__skill_level__range=(skill_level-1, skill_level+1))
+        return match_ads
+    
+>>>>>>> Stashed changes
 
 @login_required
 def create_ad(request):

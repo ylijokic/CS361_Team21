@@ -2,7 +2,32 @@
 
 {% block content %}
     <h1>Matches</h1>
+<<<<<<< Updated upstream
     {% if matches %}
+=======
+    {% if match_ads %}
+    <div class="ads col-med-3 m-2">
+        <h2>Your Matches:</h2>
+        <div class="media card mb-5 p-2">
+            <ul>
+                {% for match_ad in match_ads %}
+                    <li>
+                        <a href="{% url 'account-profile-other' ad.creator.id %}" class="btn btn-sm btn-outline-info">Contact</a>
+                         {{ match_ad }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+    <form action="{% url 'account-matches'%}" method="post">
+        {% csrf_token %}
+        {{ form | crispy}}
+        {{ subform | crispy}}
+        <input type="submit" value="Filter">
+    </form>
+    {% if ads %}
+>>>>>>> Stashed changes
     <div class="ads col-med-3 m-2">
         <h2>Your Matches:</h2>
         <div class="media card mb-5 p-2" style="width: 31rem">
