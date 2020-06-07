@@ -9,6 +9,21 @@
         {{ subform | crispy}}
         <input type="submit" value="Filter">
     </form>
+    {% if match_ads %}
+    <div class="ads col-med-3 m-2">
+        <h2>Your Matches:</h2>
+        <div class="media card mb-5 p-2">
+            <ul>
+                {% for match_ad in match_ads %}
+                    <li>
+                        <div class="media card mb-5 p-2" style="width: 31rem">
+                         {{ match_ad }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
     {% if ads %}
     <div class="ads col-med-3 m-2">
         <h2>Ads List:</h2>

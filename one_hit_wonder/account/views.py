@@ -122,6 +122,8 @@ def matches(request):
     if profile_is_incomplete(request.user):
         return redirect('account-home')
 
+    match_ads = get_matches(request)
+
     form = SearchAdForm()
     subform = StateSubform()
 
@@ -144,7 +146,22 @@ def matches(request):
     else:
         ads = Advertisement.objects.filter(position_filled=False).order_by('location__state', 'instrument__name')
 
-    return render(request, 'account/matches.html', { 'form': form, 'subform': subform, 'ads': ads})
+    return render(request, 'account/matches.html', { 'form': form, 'subform': subform, 'match_ads': match_ads, 'ads': ads})
+
+def get_matches(request):
+    if not profile_is_incomplete(request.user) and request.user.musician.looking_for_work:
+        # We know we can find if there are any ads matching this user
+        # since their profile is complete and they are looking for work
+        musician = Musician.objects.get(user=request.user)
+        # Get the skill level of the musician's instrument
+        skill_level = musician.instruments.all()[0].skill_level
+        # Filter by open ads for the same state, instrument name and a skill level that's between one rank below
+        # and one rank above the logged in user's skill with that instrument
+        match_ads = Advertisement.objects.filter(position_filled=False,
+            location__state__exact=musician.location.state,
+            instrument__name__in=musician.instruments.all().values('name'),
+            instrument__skill_level__range=(skill_level-1, skill_level+1))
+        return match_ads
 
 
 @login_required
