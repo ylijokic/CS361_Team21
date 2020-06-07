@@ -49,7 +49,6 @@ class MusicianProfileForm(ModelForm):
             'instagram': 'Instagram',
         }
 
-
 # class for the Profile Completion form
 class InstrumentSubform(ModelForm):
     name = forms.CharField(required=True, label='Instrument')

@@ -16,8 +16,8 @@
             </ul>
         </div>
     </div>
-    <h2>Open Listings:</h2>
     {% endif %}
+    <h2>Open Listings:</h2>
     <form action="{% url 'account-matches'%}" method="post">
         {% csrf_token %}
         {{ form | crispy}}

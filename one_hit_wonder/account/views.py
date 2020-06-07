@@ -136,7 +136,6 @@ def matches(request):
             ads = Advertisement.objects.filter(position_filled=False).order_by('location__state', 'instrument__name')
     else:
         ads = Advertisement.objects.filter(position_filled=False).order_by('location__state', 'instrument__name')
-
     return render(request, 'account/matches.html', { 'form': form, 'subform': subform, 'match_ads': match_ads, 'ads': ads})
 
 def get_matches(request):
@@ -152,8 +151,8 @@ def get_matches(request):
             location__state__exact=musician.location.state,
             instrument__name__in=musician.instruments.all().values('name'),
             instrument__skill_level__range=(skill_level-1, skill_level+1))
-        return match_ads
 
+        return match_ads
 
 @login_required
 def create_ad(request):
