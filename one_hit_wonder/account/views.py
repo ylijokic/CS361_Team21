@@ -123,9 +123,9 @@ def matches(request):
     if request.method == 'POST':
         subform = StateSubform(request.POST)
         instance = subform.save(commit=False)
+
         if hasattr(instance, 'state'):
             state = instance.state
-            SearchAdForm
             ads = Advertisement.objects.exclude(creator__user=request.user).filter(position_filled=False, location__state=state)
         form = SearchAdForm(request.POST)
         instance = form.save(commit=False)
@@ -136,7 +136,7 @@ def matches(request):
             ads = Advertisement.objects.exclude(creator__user=request.user).filter(position_filled=False, location__state=state,
                                                instrument__name=instrument.name)
         if not hasattr(instance, 'state') and not hasattr(instance, 'instrument'):
-            ads = Advertisement.objects.filter(position_filled=False).order_by('location__state', 'instrument__name')
+            ads = Advertisement.objects.exclude(creator__user=request.user).filter(position_filled=False).order_by('location__state', 'instrument__name')
     else:
         ads = Advertisement.objects.exclude(creator__user=request.user).filter(position_filled=False).order_by('location__state', 'instrument__name')
     return render(request, 'account/matches.html',
