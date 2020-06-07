@@ -10,7 +10,6 @@ urlpatterns = [
     path('profile/', views.profile, name='account-profile'),
     path('profile/<str:pk>', views.profile_other, name='account-profile-other'),
     path('profile/update/', views.update_profile, name='account-profile-update'),
-    path('messages/', views.messages, name='account-messages'),
     path('matches/', views.matches, name='account-matches'),
     path('matches/<str:state>/<str:instrument>', views.matches, name='account-matches'),
     path('create_ad/', views.create_ad, name='account-create_ad'),

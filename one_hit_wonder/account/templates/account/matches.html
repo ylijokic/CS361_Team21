@@ -3,12 +3,6 @@
 
 {% block content %}
     <h1>Matches</h1>
-    <form action="{% url 'account-matches'%}" method="post">
-        {% csrf_token %}
-        {{ form | crispy}}
-        {{ subform | crispy}}
-        <input type="submit" value="Filter">
-    </form>
     {% if match_ads %}
     <div class="ads col-med-3 m-2">
         <h2>Your Matches:</h2>
@@ -16,17 +10,22 @@
             <ul>
                 {% for match_ad in match_ads %}
                     <li>
-                        <div class="media card mb-5 p-2" style="width: 31rem">
                          {{ match_ad }}
                     </li>
                 {% endfor %}
             </ul>
         </div>
     </div>
+    <h2>Open Listings:</h2>
     {% endif %}
+    <form action="{% url 'account-matches'%}" method="post">
+        {% csrf_token %}
+        {{ form | crispy}}
+        {{ subform | crispy}}
+        <input type="submit" value="Filter">
+    </form>
     {% if ads %}
     <div class="ads col-med-3 m-2">
-        <h2>Ads List:</h2>
         <div class="media card mb-5 p-2">
             <ul>
                 {% for ad in ads %}

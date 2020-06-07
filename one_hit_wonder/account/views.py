@@ -109,15 +109,6 @@ def profile_other(request, pk):
 
 # Decorator to check if user is logged in before displaying profile
 @login_required
-def messages(request):
-    if profile_is_incomplete(request.user):
-        return redirect('account-home')
-
-    return render(request, 'account/messages.html', {'title': 'Messages'})
-
-
-# Decorator to check if user is logged in before displaying profile
-@login_required
 def matches(request):
     if profile_is_incomplete(request.user):
         return redirect('account-home')
